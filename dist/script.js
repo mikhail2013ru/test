@@ -14052,6 +14052,7 @@ const modals = () => {
       modal = document.querySelector(modalSelector),
       close = document.querySelector(closeSelector),
       windows = document.querySelectorAll('[data-modal]');
+    console.log(trigger);
 
     // trigger.addEventListener('click', (e) => {
     //     if (e.target) {
@@ -14066,18 +14067,31 @@ const modals = () => {
 
     trigger.forEach(item => {
       item.addEventListener('click', e => {
-        if (e.target) {
-          e.preventDefault();
-        }
+        // console.log(e.target);
+        // e.target.classList.add('active-modal')
+        // modal.style.display = 'block'
+        // e.target.classList.contains('popup_calc_btn')
+        // if (!e.target.classList.contains('active-modal')) {
+        //     console.log(e.target.classList);
+        //     console.log(item);
+        //     console.log(e.target);
+        //     // e.preventDefault()
+        // } else {
+        //     // e.target.classList.add('active-modal')
+        // }
         windows.forEach(item => {
           item.style.display = 'none';
+          // console.log(item);
         });
+        // console.log(validateForm());
+
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         // document.body.classList.add('modal-open')
       });
     });
-    close.addEventListener('click', () => {
+    close.addEventListener('click', e => {
+      console.log(e);
       windows.forEach(item => {
         item.style.display = 'none';
       });
@@ -14088,9 +14102,9 @@ const modals = () => {
     modal.addEventListener('click', e => {
       if (e.target === modal && closeClickOverlay) {
         windows.forEach(item => {
+          console.log(item);
           item.style.display = 'none';
         });
-        console.log(modalState);
         modal.style.display = 'none';
         document.body.style.overflow = '';
         // document.body.classList.remove('modal-open')
@@ -14109,27 +14123,39 @@ const modals = () => {
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close', false);
   // bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false)
   bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
-  function validateForm(form) {
-    const inputs = form.querySelectorAll('input[required]'); // Выбираем все input с атрибутом required
+  function validateForm() {
+    const modalForm = document.querySelector('.popup_calc'),
+      inputs = modalForm.querySelectorAll('input[required]');
     let isValid = true;
     inputs.forEach(input => {
       if (input.value.trim() === '') {
-        input.classList.add('invalid'); // Добавляем класс для визуальной индикации ошибки
+        input.classList.add('invalid');
         isValid = false;
       } else {
-        input.classList.remove('invalid'); // Убираем класс, если поле заполнено корректно
+        input.value = '';
+        input.classList.remove('invalid');
       }
     });
     return isValid;
   }
-  document.querySelector('#popup_calc_button--id').addEventListener('click', () => {
-    const modalForm = document.querySelector('.popup_calc_content'); // Предполагается, что форма находится внутри модального окна
-    if (validateForm(modalForm)) {
-      // console.log(modalForm);
-      bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
+  document.querySelector('.popup_calc_button').addEventListener('click', () => {
+    const modalForm = document.querySelector('.popup_calc'),
+      calcButton = document.querySelector('.popup_calc_button'),
+      calcProfile = document.querySelector('.popup_calc_profile');
+    let result = validateForm();
+    console.log(result);
+    if (modalForm && result) {
+      calcButton.style.display = 'inline-block';
+      calcProfile.style.display = 'block';
+      modalForm.style.display = 'none';
     } else {
-      alert('Пожалуйста, заполните все обязательные поля!'); // Или более изящное сообщение об ошибке
+      alert('Пожалуйста, заполните все обязательные поля!');
     }
+  });
+  document.querySelector('.popup_calc_profile_close').addEventListener('click', () => {
+    const calcProfile = document.querySelector('.popup_calc_profile');
+    calcProfile.style.display = 'none';
+    document.body.style.overflow = '';
   });
   return bindModal;
 };
@@ -14153,7 +14179,6 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display
   const header = document.querySelector(headerSelector),
     tab = document.querySelectorAll(tabSelector),
     content = document.querySelectorAll(contentSelector);
-  console.log(content);
   function hideTabContent() {
     content.forEach(item => {
       item.style.display = 'none';
@@ -14171,7 +14196,6 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display
   header.addEventListener('click', e => {
     const target = e.target;
     if (target && target.classList.contains(tabSelector.replace(/\./, '')) || target.parentNode.classList.contains(tabSelector.replace(/\./, ''))) {
-      // console.log('true');
       tab.forEach((item, i) => {
         if (target == item || target.parentNode == item) {
           hideTabContent();
