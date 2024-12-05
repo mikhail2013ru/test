@@ -5,10 +5,8 @@ const modals = () => {
         const trigger = document.querySelectorAll(triggerSelector),
             modal = document.querySelector(modalSelector),
             close = document.querySelector(closeSelector),
-            windows = document.querySelectorAll('[data-modal]')
-
-            console.log(trigger);
-
+            windows = document.querySelectorAll('[data-modal]'),
+            scroll = calcScroll()
         // trigger.addEventListener('click', (e) => {
         //     if (e.target) {
         //         console.log(e.target);
@@ -42,6 +40,7 @@ const modals = () => {
                 
                 modal.style.display = 'block'
                 document.body.style.overflow = 'hidden'
+                document.body.style.marginRight = `${scroll}px`
                 // document.body.classList.add('modal-open')
             })
         })
@@ -54,6 +53,7 @@ const modals = () => {
 
             modal.style.display = 'none'
             document.body.style.overflow = ''
+            document.body.style.marginRight = `0px`
             // document.body.classList.remove('modal-open')
         })
 
@@ -66,6 +66,7 @@ const modals = () => {
 
                 modal.style.display = 'none'
                 document.body.style.overflow = ''
+                document.body.style.marginRight = `0px`
                 // document.body.classList.remove('modal-open')
             }
         })
@@ -100,7 +101,8 @@ const modals = () => {
         });
         
         return isValid;
-      }
+        
+    }
       
       
     document.querySelector('.popup_calc_button').addEventListener('click', () => {
@@ -108,7 +110,6 @@ const modals = () => {
             calcButton = document.querySelector('.popup_calc_button'),
             calcProfile = document.querySelector('.popup_calc_profile');
             let result = validateForm()
-            console.log(result);
             if (modalForm && result) {
                 calcButton.style.display = 'inline-block'
                 calcProfile.style.display = 'block'
@@ -125,6 +126,19 @@ const modals = () => {
     })
 
     return bindModal
+
+    function calcScroll() {
+        let div = document.createElement('div')
+        div.style.width = '50px'
+        div.style.height = '50px'
+        div.style.overflowY = 'scroll'
+        div.style.visibility = 'hidden'
+        document.body.appendChild(div)
+        let scrollWidth = div.offsetWidth - div.clientWidth
+        div.remove()
+
+        return scrollWidth
+    }
 }
 
 // const bindModal = modals()
